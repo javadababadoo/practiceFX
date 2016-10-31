@@ -127,6 +127,10 @@ public class Ball3Mgr {
         speed = 2d;
         speedX = speed * Math.cos(Math.toRadians(angle));
         speedY = speed * Math.sin(Math.toRadians(angle));
+        directionX = 1d;
+        directionY = 1d;
+        traveledDistanceX = 0d;
+        traveledDistanceY = 0d;
         ballform.t.setY(150);
         ballform.t.setX(-500);
         ballform.t.setZ(500);
@@ -147,35 +151,52 @@ public class Ball3Mgr {
             }
 
             speedY += gravity * time;
-            speedY = speedY * 0.85 * -1;
+            speedY = speedY * 0.80 * -1;
+
         } else {
             //Final Speed = Initial Speed + (Accelaration * Delta Time)
             speedY += gravity * time;
         }
 
-
         if (ballform.t.getX() <= -1000 || ballform.t.getX() >= 1000) {
             directionX = directionX * -1;
+            System.out.println("DirectionX: "+ directionX + " ballform.t.getX()-> "+ ballform.t.getX());
         }
 
         //System.out.println("Speed X: " + speedX);
         //Final Speed = Initial Speed + (Accelaration * Delta Time)
         speedY += gravity * time;
+        if (Math.abs(speedY) < 0.03) {
+            speedY = 0d;
+        }
+
+        //System.out.println( " -- Speed: " + speedY);
+
         //Delta Y = (Initial Speed * Delta time) + (0.5 * acceleration * (Delta Time)ˆ2)       
         traveledDistanceY = (speedY * time) + (0.5 * gravity * Math.pow(time, 2));
 
         //double x = ballXform.t.getX() + directionX * speedX * time;
         traveledDistanceX = (speedX * time) * directionX;
-        System.out.println("directionX-> " + directionX);
-        System.out.println("traveledDistanceX-> " + traveledDistanceX);
+//        System.out.println("directionX-> " + directionX);
+//        System.out.println("traveledDistanceX-> " + traveledDistanceX);
         //Final Y = (Initial Y) + (Delta Y)
         double y = ballform.t.getY() + traveledDistanceY;
         double x = ballform.t.getX() + traveledDistanceX;
 
         if (y <= radius) {
             y = radius;
+            //speedY = 0d;            
 //            finish = true;
         }
+        
+        if(x <= -1000){
+            x = -1000;
+        }
+        
+        if(x >= 1000){
+            x = 1000;
+        }
+        //System.out.println("y: "+y);
 
         ballform.t.setY(y);
         ballform.t.setX(x);
