@@ -40,7 +40,7 @@ public class AxisMgr {
     public void buildAxes(Xform world) {                
         Log.print("build axes ... ");
         
-        float len = 1000;
+        float len = 2000;
         float bold = 3;
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKRED);

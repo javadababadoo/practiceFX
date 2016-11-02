@@ -44,7 +44,7 @@ public class PlaneMgr {
         whiteMaterial.setSpecularColor(Color.WHITE);
 
         float bold = 0.5f;
-        int halfPlaneSize = 500;
+        int halfPlaneSize = 1000;
 
         for (int pos = -halfPlaneSize; pos < halfPlaneSize; pos += 20) {
             final Box xLines = new Box(halfPlaneSize * 2, bold, bold);
