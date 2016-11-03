@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package co.com.nebulae.course.world;
+package co.com.nebulae.course.world.labs;
 
+import co.com.nebulae.course.world.*;
 import co.com.nebulae.course.entity.Xform;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;

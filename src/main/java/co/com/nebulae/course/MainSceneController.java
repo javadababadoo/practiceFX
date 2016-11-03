@@ -2,8 +2,6 @@ package co.com.nebulae.course;
 
 import co.com.nebulae.course.world.AngularBallMgr;
 import co.com.nebulae.course.world.AxisMgr;
-import co.com.nebulae.course.world.Ball2Mgr;
-import co.com.nebulae.course.world.Ball3Mgr;
 import co.com.nebulae.course.world.BallMgr;
 import co.com.nebulae.course.world.CameraMgr;
 import co.com.nebulae.course.world.GameLoop;
@@ -11,6 +9,7 @@ import co.com.nebulae.course.world.InputMgr;
 import co.com.nebulae.course.world.Log;
 import co.com.nebulae.course.world.PlaneMgr;
 import co.com.nebulae.course.world.SceneMgr;
+import co.com.nebulae.course.world.labs.Ball3Mgr;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -33,7 +32,7 @@ public class MainSceneController implements Initializable {
         AxisMgr.getInstance().buildAxes(SceneMgr.getInstance().getWorld());
         PlaneMgr.getInstance().buildPlane(SceneMgr.getInstance().getWorld());
         //MoleculeMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
-        BallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
+        //BallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
         //Ball2Mgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
         Ball3Mgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
         AngularBallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());

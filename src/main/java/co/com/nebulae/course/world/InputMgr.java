@@ -5,6 +5,7 @@
  */
 package co.com.nebulae.course.world;
 
+import co.com.nebulae.course.world.labs.Ball3Mgr;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
