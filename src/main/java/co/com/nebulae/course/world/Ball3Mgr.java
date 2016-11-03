@@ -167,11 +167,11 @@ public class Ball3Mgr {
                 speedZ = 0d;
             }
 
+            speedY += gravity * time;
+            speedY = speedY * 0.80 * -1;
+
             if (speedY < -0.1) {
                 speedY = 0d;
-            } else {
-                speedY += gravity * time;
-                speedY = speedY * 0.80 * -1;
             }
 
         } else {
