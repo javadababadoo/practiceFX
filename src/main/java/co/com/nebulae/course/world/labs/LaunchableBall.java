@@ -10,23 +10,37 @@ import co.com.nebulae.course.entity.Xform;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Cylinder;
 import javafx.scene.shape.Sphere;
 
 /**
  *
  * @author Sebastian Molano - nebulae.com.co
  */
-public class Ball implements WorldShape {
+public class LaunchableBall implements WorldShape {
 
-    //dependencies
     private Xform world;
-    private Xform ballform;
-    private Double directionX = 1d;
-    private Double directionZ = 1d;
-    private Sphere oxygenSphere;
+    final Xform elementsGroup = new Xform();
 
-    //Free fall
+    //<editor-fold defaultstate="collapsed" desc="ARROW">
+    private Xform arrowform;
+
+    private Cylinder cylinder;
+    
+    private Double arrowHeight = 400d;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="LAUNCHBALL">
+    private Xform ballform;
+    private Sphere oxygenSphere;
+    //</editor-fold>
+
+    //<editor-fold defaultstate="collapsed" desc="PROPERTIES">
+    private Double directionX = 1d;
+    private Double directionY = 1d;
+    private Double directionZ = 1d;
     private Double gravity = -9.8 / 1000;
+    private Double angle = 70d;
     private Double angleX = 60d;
     private Double angleY = 20d;
     private Double angleZ = 70d;
@@ -41,8 +55,7 @@ public class Ball implements WorldShape {
     private Boolean go = false;
     private Double radius = 25d;
     private Double frictionCoefficient = 0.005d;
-
-    final Xform elementsGroup = new Xform();
+    //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GETTER AND SETTER">
     /**
@@ -100,29 +113,46 @@ public class Ball implements WorldShape {
     }
 
 //</editor-fold>
-    
     public void buildElements(Xform world) {
+        this.world = world;
+        ballform = new Xform();
         Log.print("build ball ... ");
+
+        final PhongMaterial greyMaterial = new PhongMaterial();
+        greyMaterial.setDiffuseColor(Color.DARKGREY);
+        greyMaterial.setSpecularColor(Color.GREY);
+
+        arrowform = new Xform();
+        cylinder = new Cylinder(20, arrowHeight);
+        //cylinder.heightProperty().
+        cylinder.setMaterial(greyMaterial);
+        arrowform.getChildren().add(cylinder);
+
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKORANGE);
         redMaterial.setSpecularColor(Color.ORANGE);
 
-        ballform = new Xform();
         oxygenSphere = new Sphere(radius);
         oxygenSphere.setMaterial(redMaterial);
         ballform.getChildren().add(oxygenSphere);
 
         elementsGroup.getChildren().add(ballform);
+        elementsGroup.getChildren().add(arrowform);
 
         ballform.t.setY(150);
         ballform.t.setX(-500);
         ballform.t.setZ(500);
-        this.world = world;
+
+        arrowform.t.setY(200);
+        arrowform.t.setX(0);
+        arrowform.t.setZ(0);
+
         world.getChildren().addAll(elementsGroup);
     }
 
     public void go() {
         go = false;
+        angle = 70d;
         angleX = 60d;
         angleY = 20d;
         angleZ = 70d;
@@ -131,6 +161,7 @@ public class Ball implements WorldShape {
         speedY = speed * Math.cos(Math.toRadians(angleY));
         speedZ = speed * Math.cos(Math.toRadians(angleZ));
         directionX = 1d;
+        directionY = 1d;
         directionZ = 1d;
         traveledDistanceX = 0d;
         traveledDistanceY = 0d;
@@ -138,7 +169,8 @@ public class Ball implements WorldShape {
         ballform.t.setY(150);
         ballform.t.setX(-500);
         ballform.t.setZ(500);
-        go = true;
+        //go = true;
+        //finish = false;
     }
 
     public void move(Long time) {
@@ -166,8 +198,8 @@ public class Ball implements WorldShape {
         } else {
             speedY += gravity * time;
         }
-        
-        if(stopY){
+
+        if (stopY) {
             speedY = 0d;
         }
 
@@ -187,11 +219,8 @@ public class Ball implements WorldShape {
         double x = ballform.t.getX() + traveledDistanceX;
 
         if (y <= radius) {
-            System.out.println("speedY-> " + speedY);
             y = radius;
         }
-
-        System.out.println("y: " + y);
 
         if (x <= -1000) {
             x = -1000;
@@ -212,8 +241,8 @@ public class Ball implements WorldShape {
         ballform.t.setZ(z);
         ballform.t.setY(y);
         ballform.t.setX(x);
-        
-        if(stopY && speedX == 0 && speedZ == 0){
+
+        if (stopY && speedX == 0 && speedZ == 0) {
             world.getChildren().remove(elementsGroup);
             go = false;
         }
@@ -231,13 +260,21 @@ public class Ball implements WorldShape {
 
     @Override
     public void handleInput(KeyEvent keyEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        switch (keyEvent.getCode()) {
+            case UP:
+            case DOWN:
+                //arrowform.
+                break;
+            case RIGHT:
+            case LEFT:
+                break;
+
+        }
     }
 
     @Override
     public boolean isValid() {
-        System.out.println("stopY-> "+ stopY+ " - speedX-> "+speedX+ " - speedZ-> "+ speedZ);
-        return !(stopY && speedX == 0 && speedZ == 0);
+        return go;
     }
 
 }

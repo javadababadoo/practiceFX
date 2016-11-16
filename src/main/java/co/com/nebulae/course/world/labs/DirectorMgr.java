@@ -5,8 +5,11 @@
  */
 package co.com.nebulae.course.world.labs;
 
+import co.com.nebulae.course.world.SceneMgr;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.event.Event;
+import javafx.scene.input.KeyEvent;
 
 /**
  *
@@ -21,7 +24,6 @@ public class DirectorMgr {
     private List<WorldShape> partialDynamicObjects = new ArrayList<>();
 
     //<editor-fold defaultstate="collapsed" desc="SINGLETON">
-
     private DirectorMgr() {
     }
 
@@ -76,15 +78,30 @@ public class DirectorMgr {
         private static final DirectorMgr INSTANCE = new DirectorMgr();
     }
     //</editor-fold>
-    
-    public void handleGameLoop(Long time){
+
+    public void handleGameLoop(Long time) {
         partialDynamicObjects.stream().forEach((worldShape) -> {
             worldShape.redraw(time);
         });
+        partialDynamicObjects.removeIf((worldShape) -> !worldShape.isValid());
     }
 
-    public void addPartialObject(WorldShape worldShape){
-        partialDynamicObjects.add(worldShape);
+    public void inputEventListener(KeyEvent event, boolean keyPressed) {
+        switch (event.getCode()) {
+            case SPACE:
+                if (keyPressed) {
+                    LaunchableBall ball = new LaunchableBall();
+                    ball.buildElements(SceneMgr.getInstance().getWorld());
+                    ball.go();
+                    partialDynamicObjects.add(ball);
+                    break;
+                }
+
+            default:
+                partialDynamicObjects.get(partialDynamicObjects.size()-1).handleInput(event);
+                break;
+
+        }
     }
-    
+
 }

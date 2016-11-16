@@ -5,7 +5,7 @@
  */
 package co.com.nebulae.course.world;
 
-import co.com.nebulae.course.world.labs.Ball;
+import co.com.nebulae.course.world.labs.LaunchableBall;
 import co.com.nebulae.course.world.labs.DirectorMgr;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
@@ -130,24 +130,11 @@ public class InputMgr {
         final boolean moveCamera = true;
 
         scene.setOnKeyPressed((event) -> {
-            switch (event.getCode()) {
-                case SPACE:
-//                    Ball2Mgr.getInstance().getOxygenform().t.setY(800);
-//                    Ball2Mgr.getInstance().setSpeedY(0d);
-//                    Ball2Mgr.getInstance().setGravity(0.00098);
-                    //Ball3Mgr.getInstance().go();
-                    Ball ball = new Ball();
-                    ball.buildElements(SceneMgr.getInstance().getWorld());
-                    ball.go();
-                    DirectorMgr.getInstance().addPartialObject(ball);
-                    break;
-            }
+            DirectorMgr.getInstance().inputEventListener(event, true);
         });
 
         scene.setOnKeyReleased((event) -> {
-            System.out.println(event);
-            switch (event.getCode()) {
-            }
+            DirectorMgr.getInstance().inputEventListener(event, false);
         });
 
     }
