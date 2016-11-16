@@ -2,7 +2,6 @@ package co.com.nebulae.course;
 
 import co.com.nebulae.course.world.AngularBallMgr;
 import co.com.nebulae.course.world.AxisMgr;
-import co.com.nebulae.course.world.BallMgr;
 import co.com.nebulae.course.world.CameraMgr;
 import co.com.nebulae.course.world.GameLoop;
 import co.com.nebulae.course.world.InputMgr;
@@ -34,8 +33,8 @@ public class MainSceneController implements Initializable {
         //MoleculeMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
         //BallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
         //Ball2Mgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
-        Ball3Mgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
-        AngularBallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
+        //Ball3Mgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
+        //AngularBallMgr.getInstance().buildElements(SceneMgr.getInstance().getWorld());
 
         InputMgr.getInstance().configureKeyboardActions(SceneMgr.getInstance().getScene(), SceneMgr.getInstance().getWorld());
         InputMgr.getInstance().configureMouseActions(SceneMgr.getInstance().getScene(), SceneMgr.getInstance().getWorld());

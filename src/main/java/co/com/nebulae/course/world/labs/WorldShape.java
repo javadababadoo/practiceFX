@@ -15,7 +15,7 @@ public interface WorldShape {
     
     public boolean collide(WorldShape worldShape);
     
-    public void redraw();
+    public void redraw(Long time);
     
     public void handleInput(KeyEvent keyEvent);
     

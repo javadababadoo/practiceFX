@@ -79,7 +79,7 @@ public class DirectorMgr {
     
     public void handleGameLoop(Long time){
         partialDynamicObjects.stream().forEach((worldShape) -> {
-            worldShape.redraw();
+            worldShape.redraw(time);
         });
     }
 

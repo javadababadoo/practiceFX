@@ -5,7 +5,8 @@
  */
 package co.com.nebulae.course.world;
 
-import co.com.nebulae.course.world.labs.Ball3Mgr;
+import co.com.nebulae.course.world.labs.Ball;
+import co.com.nebulae.course.world.labs.DirectorMgr;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -129,131 +130,16 @@ public class InputMgr {
         final boolean moveCamera = true;
 
         scene.setOnKeyPressed((event) -> {
-            Duration currentTime;
             switch (event.getCode()) {
-                case Z:
-                    if (event.isShiftDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().ry.setAngle(0.0);
-                        cameraMgr.getCameraXform_1_xy_r().rx.setAngle(0.0);
-                        cameraMgr.getCamera().setTranslateZ(-300.0);
-                    }
-                    cameraMgr.getCameraXform_2_xy_t().t.setX(0.0);
-                    cameraMgr.getCameraXform_2_xy_t().t.setY(0.0);
-                    break;
-                case X:
-                    if (event.isControlDown()) {
-                        if (AxisMgr.getInstance().getAxisGroup().isVisible()) {
-                            System.out.println("setVisible(false)");
-                            AxisMgr.getInstance().getAxisGroup().setVisible(false);
-                        } else {
-                            System.out.println("setVisible(true)");
-                            AxisMgr.getInstance().getAxisGroup().setVisible(true);
-                        }
-                    }
-                    break;
-                case V:
-                    if (event.isControlDown()) {
-                        if (MoleculeMgr.getInstance().getElementsGroup().isVisible()) {
-                            MoleculeMgr.getInstance().getElementsGroup().setVisible(false);
-                        } else {
-                            MoleculeMgr.getInstance().getElementsGroup().setVisible(true);
-                        }
-                    }
-                    break;
                 case SPACE:
 //                    Ball2Mgr.getInstance().getOxygenform().t.setY(800);
 //                    Ball2Mgr.getInstance().setSpeedY(0d);
 //                    Ball2Mgr.getInstance().setGravity(0.00098);
-                    Ball3Mgr.getInstance().go();
-                    break;
-                case W:
-                    if (event.isControlDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setY(cameraMgr.getCameraXform_2_xy_t().t.getY() - 10.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().rx.setAngle(cameraMgr.getCameraXform_1_xy_r().rx.getAngle() - 10.0 * ALT_MULTIPLIER);
-                    } else if (event.isControlDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setY(cameraMgr.getCameraXform_2_xy_t().t.getY() - 1.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().rx.setAngle(cameraMgr.getCameraXform_1_xy_r().rx.getAngle() - 2.0 * ALT_MULTIPLIER);
-                    } else if (event.isShiftDown()) {
-                        double z = cameraMgr.getCamera().getTranslateZ();
-                        double newZ = z + 5.0 * SHIFT_MULTIPLIER;
-                        cameraMgr.getCamera().setTranslateZ(newZ);
-                    }
-                    break;
-
-                case S:
-                    if (event.isControlDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setY(cameraMgr.getCameraXform_2_xy_t().t.getY() + 10.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().rx.setAngle(cameraMgr.getCameraXform_1_xy_r().rx.getAngle() + 10.0 * ALT_MULTIPLIER);
-                    } else if (event.isControlDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setY(cameraMgr.getCameraXform_2_xy_t().t.getY() + 1.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().rx.setAngle(cameraMgr.getCameraXform_1_xy_r().rx.getAngle() + 2.0 * ALT_MULTIPLIER);
-                    } else if (event.isShiftDown()) {
-                        double z = cameraMgr.getCamera().getTranslateZ();
-                        double newZ = z - 5.0 * SHIFT_MULTIPLIER;
-                        cameraMgr.getCamera().setTranslateZ(newZ);
-                    }
-                    break;
-                case D:
-                    if (event.isControlDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setX(cameraMgr.getCameraXform_2_xy_t().t.getX() + 10.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().ry.setAngle(cameraMgr.getCameraXform_1_xy_r().ry.getAngle() - 10.0 * ALT_MULTIPLIER);
-                    } else if (event.isControlDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setX(cameraMgr.getCameraXform_2_xy_t().t.getX() + 1.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().ry.setAngle(cameraMgr.getCameraXform_1_xy_r().ry.getAngle() - 2.0 * ALT_MULTIPLIER);
-                    }
-                    break;
-                case A:
-                    if (event.isControlDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setX(cameraMgr.getCameraXform_2_xy_t().t.getX() - 10.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown() && event.isShiftDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().ry.setAngle(cameraMgr.getCameraXform_1_xy_r().ry.getAngle() + 10.0 * ALT_MULTIPLIER);  // -
-                    } else if (event.isControlDown()) {
-                        cameraMgr.getCameraXform_2_xy_t().t.setX(cameraMgr.getCameraXform_2_xy_t().t.getX() - 1.0 * CONTROL_MULTIPLIER);
-                    } else if (event.isAltDown()) {
-                        cameraMgr.getCameraXform_1_xy_r().ry.setAngle(cameraMgr.getCameraXform_1_xy_r().ry.getAngle() + 2.0 * ALT_MULTIPLIER);  // -
-                    }
-                    break;
-                case UP:
-                    if (event.isMetaDown()) {
-                        AngularBallMgr.getInstance().setDirectionRadio(1d);
-                        AngularBallMgr.getInstance().setSpeedRadio(0.1d);
-                    } else {
-                        BallMgr.getInstance().setDirectionZ(1d);
-                        BallMgr.getInstance().setSpeedZ(0.1d);
-                    }
-                    break;
-                case DOWN:
-                    if (event.isMetaDown()) {
-                        AngularBallMgr.getInstance().setDirectionRadio(-1d);
-                        AngularBallMgr.getInstance().setSpeedRadio(0.1d);
-                    } else {
-                        BallMgr.getInstance().setDirectionZ(-1d);
-                        BallMgr.getInstance().setSpeedZ(0.1d);
-                    }
-                    break;
-                case LEFT:
-                    if (event.isMetaDown()) {
-                        AngularBallMgr.getInstance().setDirectionAngle(1d);
-                        AngularBallMgr.getInstance().setSpeedAngle(0.005d);
-                    } else {
-                        BallMgr.getInstance().setDirectionX(1d);
-                        BallMgr.getInstance().setSpeedX(0.1d);
-                    }
-                    break;
-                case RIGHT:
-                    if (event.isMetaDown()) {
-                        AngularBallMgr.getInstance().setDirectionAngle(-1d);
-                        AngularBallMgr.getInstance().setSpeedAngle(0.005d);
-                    } else {
-                        BallMgr.getInstance().setDirectionX(-1d);
-                        BallMgr.getInstance().setSpeedX(0.1d);
-                    }
+                    //Ball3Mgr.getInstance().go();
+                    Ball ball = new Ball();
+                    ball.buildElements(SceneMgr.getInstance().getWorld());
+                    ball.go();
+                    DirectorMgr.getInstance().addPartialObject(ball);
                     break;
             }
         });
@@ -261,20 +147,6 @@ public class InputMgr {
         scene.setOnKeyReleased((event) -> {
             System.out.println(event);
             switch (event.getCode()) {
-                case UP:
-                case DOWN:
-//                    AngularBallMgr.getInstance().setDirectionRadio(1d);
-//                    AngularBallMgr.getInstance().setSpeedRadio(0d);
-                    BallMgr.getInstance().setDirectionZ(1d);
-                    BallMgr.getInstance().setSpeedZ(0d);
-                    break;
-                case LEFT:
-                case RIGHT:
-//                    AngularBallMgr.getInstance().setDirectionAngle(1d);
-//                    AngularBallMgr.getInstance().setSpeedAngle(0d);
-                    BallMgr.getInstance().setDirectionX(1d);
-                    BallMgr.getInstance().setSpeedX(0d);
-                    break;
             }
         });
 

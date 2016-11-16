@@ -6,6 +6,7 @@
 package co.com.nebulae.course.world;
 
 import co.com.nebulae.course.world.labs.Ball3Mgr;
+import co.com.nebulae.course.world.labs.DirectorMgr;
 import javafx.animation.AnimationTimer;
 
 /**
@@ -35,8 +36,9 @@ public class GameLoop extends AnimationTimer {
         
         
         //BallMgr.getInstance().move(t);
-        Ball3Mgr.getInstance().move(t);
-        //AngularBallMgr.getInstance().move(t);        
+        //Ball3Mgr.getInstance().move(t);
+        //AngularBallMgr.getInstance().move(t);  
+        DirectorMgr.getInstance().handleGameLoop(t);
         
         SceneMgr.getInstance().getScene().requestFocus();
         
