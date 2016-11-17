@@ -26,10 +26,16 @@ public class LaunchableBall implements WorldShape {
     private Xform arrowform;
 
     private Cylinder cylinder;
-    
-    private Double arrowHeight = 400d;
-    //</editor-fold>
 
+    private Double arrowRadius = 20d;
+
+    private Double arrowHeight = 400d;
+
+    private Double angleYArrow;
+
+    private Double angleXArrow;
+
+    //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="LAUNCHBALL">
     private Xform ballform;
     private Sphere oxygenSphere;
@@ -53,6 +59,7 @@ public class LaunchableBall implements WorldShape {
     private Double traveledDistanceZ = 0d;
     private Boolean stopY = false;
     private Boolean go = false;
+    private Boolean finish = false;
     private Double radius = 25d;
     private Double frictionCoefficient = 0.005d;
     //</editor-fold>
@@ -123,7 +130,7 @@ public class LaunchableBall implements WorldShape {
         greyMaterial.setSpecularColor(Color.GREY);
 
         arrowform = new Xform();
-        cylinder = new Cylinder(20, arrowHeight);
+        cylinder = new Cylinder(arrowRadius, arrowHeight);
         //cylinder.heightProperty().
         cylinder.setMaterial(greyMaterial);
         arrowform.getChildren().add(cylinder);
@@ -146,6 +153,9 @@ public class LaunchableBall implements WorldShape {
         arrowform.t.setY(200);
         arrowform.t.setX(0);
         arrowform.t.setZ(0);
+        arrowform.setTranslateX(arrowRadius / 2);
+        arrowform.setTranslateY(arrowHeight / 2);
+        arrowform.setTranslateZ(arrowRadius / 2);
 
         world.getChildren().addAll(elementsGroup);
     }
@@ -170,7 +180,7 @@ public class LaunchableBall implements WorldShape {
         ballform.t.setX(-500);
         ballform.t.setZ(500);
         //go = true;
-        //finish = false;
+        finish = false;
     }
 
     public void move(Long time) {
@@ -245,6 +255,7 @@ public class LaunchableBall implements WorldShape {
         if (stopY && speedX == 0 && speedZ == 0) {
             world.getChildren().remove(elementsGroup);
             go = false;
+            finish = true;
         }
     }
 
@@ -262,11 +273,16 @@ public class LaunchableBall implements WorldShape {
     public void handleInput(KeyEvent keyEvent) {
         switch (keyEvent.getCode()) {
             case UP:
+                arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
+                break;
             case DOWN:
-                //arrowform.
+                arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
                 break;
             case RIGHT:
+                arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
+                break;
             case LEFT:
+                arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
                 break;
 
         }
@@ -274,7 +290,7 @@ public class LaunchableBall implements WorldShape {
 
     @Override
     public boolean isValid() {
-        return go;
+        return !finish;
     }
 
 }

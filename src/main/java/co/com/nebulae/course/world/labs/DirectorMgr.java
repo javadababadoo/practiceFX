@@ -90,6 +90,7 @@ public class DirectorMgr {
         switch (event.getCode()) {
             case SPACE:
                 if (keyPressed) {
+                    System.out.println("keyPressed->"+ keyPressed);
                     LaunchableBall ball = new LaunchableBall();
                     ball.buildElements(SceneMgr.getInstance().getWorld());
                     ball.go();
@@ -98,7 +99,9 @@ public class DirectorMgr {
                 }
 
             default:
-                partialDynamicObjects.get(partialDynamicObjects.size()-1).handleInput(event);
+                if (!partialDynamicObjects.isEmpty()) {
+                    partialDynamicObjects.get(partialDynamicObjects.size() - 1).handleInput(event);
+                }
                 break;
 
         }
