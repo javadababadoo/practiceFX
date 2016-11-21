@@ -19,6 +19,6 @@ public interface WorldShape {
     
     public void redraw(Long time);
     
-    public void handleInput(KeyEvent keyEvent);
+    public void handleInput(KeyEvent keyEvent, boolean keyPressed);
     
 }

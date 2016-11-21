@@ -35,6 +35,8 @@ public class LaunchableBall implements WorldShape {
 
     private Double angleXArrow;
 
+    private Double angleZArrow;
+
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="LAUNCHBALL">
     private Xform ballform;
@@ -153,9 +155,9 @@ public class LaunchableBall implements WorldShape {
         arrowform.t.setY(200);
         arrowform.t.setX(0);
         arrowform.t.setZ(0);
-        arrowform.setTranslateX(arrowRadius / 2);
-        arrowform.setTranslateY(arrowHeight / 2);
-        arrowform.setTranslateZ(arrowRadius / 2);
+//        arrowform.setTranslateX(arrowRadius / 2);
+//        arrowform.setTranslateY(arrowHeight / 2);
+//        arrowform.setTranslateZ(arrowRadius / 2);
 
         world.getChildren().addAll(elementsGroup);
     }
@@ -270,21 +272,37 @@ public class LaunchableBall implements WorldShape {
     }
 
     @Override
-    public void handleInput(KeyEvent keyEvent) {
-        switch (keyEvent.getCode()) {
-            case UP:
-                arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
-                break;
-            case DOWN:
-                arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
-                break;
-            case RIGHT:
-                arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
-                break;
-            case LEFT:
-                arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
-                break;
+    public void handleInput(KeyEvent keyEvent, boolean keyPressed) {
+        if (keyPressed) {
 
+            switch (keyEvent.getCode()) {
+                case UP:
+                    arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
+                    System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
+                    System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
+                    System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
+                    break;
+                case DOWN:
+                    arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
+                    System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
+                    System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
+                    System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
+                    break;
+                case RIGHT:
+                    arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
+                    System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
+                    System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
+                    System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
+                    break;
+                case LEFT:
+                    arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
+                    System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
+//                    arrowform
+                    System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
+                    System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
+                    break;
+
+            }
         }
     }
 

@@ -100,7 +100,7 @@ public class DirectorMgr {
 
             default:
                 if (!partialDynamicObjects.isEmpty()) {
-                    partialDynamicObjects.get(partialDynamicObjects.size() - 1).handleInput(event);
+                    partialDynamicObjects.get(partialDynamicObjects.size() - 1).handleInput(event, keyPressed);
                 }
                 break;
 

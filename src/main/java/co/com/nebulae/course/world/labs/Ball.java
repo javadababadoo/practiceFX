@@ -229,15 +229,17 @@ public class Ball implements WorldShape {
         move(time);
     }
 
-    @Override
-    public void handleInput(KeyEvent keyEvent) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
 
     @Override
     public boolean isValid() {
         System.out.println("stopY-> "+ stopY+ " - speedX-> "+speedX+ " - speedZ-> "+ speedZ);
         return !(stopY && speedX == 0 && speedZ == 0);
+    }
+
+    @Override
+    public void handleInput(KeyEvent keyEvent, boolean keyPressed) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
