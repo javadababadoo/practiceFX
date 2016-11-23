@@ -320,16 +320,22 @@ public class LaunchableBall implements WorldShape {
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case ENTER:
-                    angleX = arrowform.ry.getAngle();
+                    //vertical
                     angleY = arrowform.rx.getAngle();
-                    angleZ = 90 - arrowform.ry.getAngle();
+                    //horizontal
+                    angleZ = arrowform.ry.getAngle();
+                    angleX =  90 - arrowform.ry.getAngle();
+                                        
                     System.out.println("arrowform.rx.getAngle()-> " + angleX + " --- "+ Math.cos(Math.toRadians(angleX)));
                     System.out.println("arrowform.ry.getAngle()-> " + angleY + " --- "+ Math.cos(Math.toRadians(angleY)));
                     System.out.println("arrowform.rz.getAngle()-> " + angleZ + " --- "+ Math.cos(Math.toRadians(angleZ)));
+                    double inverter = (angleY >= 0 && angleY<=180) ? 1d : -1d;
+                    
+                    //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
                     speed = 3d;
-                    speedX = speed * Math.cos(Math.toRadians(angleX));
+                    speedX = speed * Math.cos(Math.toRadians(angleX))* inverter;
                     speedY = speed * Math.cos(Math.toRadians(angleY));
-                    speedZ = speed * Math.cos(Math.toRadians(angleZ));
+                    speedZ = speed * Math.cos(Math.toRadians(angleZ))* inverter;
                     elementsGroup.getChildren().remove(arrowform);
                     go = true;
                     break;
