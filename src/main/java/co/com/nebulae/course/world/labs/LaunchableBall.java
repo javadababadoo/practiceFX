@@ -162,7 +162,7 @@ public class LaunchableBall implements WorldShape {
         world.getChildren().addAll(elementsGroup);
     }
 
-    public void go() {
+    public void configure() {
         go = false;
         angle = 70d;
         angleX = 60d;
@@ -278,28 +278,60 @@ public class LaunchableBall implements WorldShape {
             switch (keyEvent.getCode()) {
                 case UP:
                     arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
+                    
+                    if(arrowform.rx.getAngle()>360){
+                       arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
+                    }
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case DOWN:
                     arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
+                    
+                    if(arrowform.rx.getAngle()<0){
+                       arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
+                    }
+                    
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case RIGHT:
                     arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
+                    
+                    if(arrowform.ry.getAngle()>360){
+                       arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
+                    }
+                    
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case LEFT:
                     arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
+                    
+                    if(arrowform.ry.getAngle()<0){
+                       arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
+                    }
+                    
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
-//                    arrowform
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
+                    break;
+                case ENTER:
+                    angleX = arrowform.ry.getAngle();
+                    angleY = arrowform.rx.getAngle();
+                    angleZ = 90 - arrowform.ry.getAngle();
+                    System.out.println("arrowform.rx.getAngle()-> " + angleX + " --- "+ Math.cos(Math.toRadians(angleX)));
+                    System.out.println("arrowform.ry.getAngle()-> " + angleY + " --- "+ Math.cos(Math.toRadians(angleY)));
+                    System.out.println("arrowform.rz.getAngle()-> " + angleZ + " --- "+ Math.cos(Math.toRadians(angleZ)));
+                    speed = 3d;
+                    speedX = speed * Math.cos(Math.toRadians(angleX));
+                    speedY = speed * Math.cos(Math.toRadians(angleY));
+                    speedZ = speed * Math.cos(Math.toRadians(angleZ));
+                    elementsGroup.getChildren().remove(arrowform);
+                    go = true;
                     break;
 
             }

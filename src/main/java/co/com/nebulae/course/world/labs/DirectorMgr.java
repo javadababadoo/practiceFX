@@ -93,7 +93,7 @@ public class DirectorMgr {
                     System.out.println("keyPressed->"+ keyPressed);
                     LaunchableBall ball = new LaunchableBall();
                     ball.buildElements(SceneMgr.getInstance().getWorld());
-                    ball.go();
+                    ball.configure();
                     partialDynamicObjects.add(ball);
                     break;
                 }
