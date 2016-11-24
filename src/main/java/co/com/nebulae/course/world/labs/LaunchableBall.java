@@ -7,6 +7,10 @@ package co.com.nebulae.course.world.labs;
 
 import co.com.nebulae.course.world.*;
 import co.com.nebulae.course.entity.Xform;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -27,9 +31,11 @@ public class LaunchableBall implements WorldShape {
 
     private Cylinder cylinder;
 
+    private Sphere point;
+
     private Double arrowRadius = 20d;
 
-    private Double arrowHeight = 400d;
+    private Double arrowHeight = 100d;
 
     private Double angleYArrow;
 
@@ -64,6 +70,12 @@ public class LaunchableBall implements WorldShape {
     private Boolean finish = false;
     private Double radius = 25d;
     private Double frictionCoefficient = 0.005d;
+    private Boolean configuredForce = false;
+    private Double directionArrow = 1d;
+    
+    private Integer value = 30;
+
+    private DoubleProperty force = new SimpleDoubleProperty(1);
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc="GETTER AND SETTER">
@@ -135,7 +147,32 @@ public class LaunchableBall implements WorldShape {
         cylinder = new Cylinder(arrowRadius, arrowHeight);
         //cylinder.heightProperty().
         cylinder.setMaterial(greyMaterial);
+
+        force.addListener(new ChangeListener<Number>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                
+                
+                
+//                if (cylinder.getHeight() < 100 || cylinder.getHeight() > 400) {
+//                    value = 30 * -1;
+//                }
+                System.out.println("Incrementar: "+ value);
+                cylinder.setHeight(arrowHeight + (newValue.doubleValue()*30));
+                point.setTranslateY(cylinder.getHeight());
+                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                
+                
+
+            }
+        });
+
+        point = new Sphere(30);
+        point.setMaterial(greyMaterial);
+        point.setTranslateY(arrowHeight / 2);
         arrowform.getChildren().add(cylinder);
+        arrowform.getChildren().add(point);
 
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKORANGE);
@@ -152,7 +189,7 @@ public class LaunchableBall implements WorldShape {
         ballform.t.setX(-500);
         ballform.t.setZ(500);
 
-        arrowform.t.setY(200);
+        arrowform.t.setY(arrowHeight / 2);
         arrowform.t.setX(0);
         arrowform.t.setZ(0);
 //        arrowform.setTranslateX(arrowRadius / 2);
@@ -278,9 +315,9 @@ public class LaunchableBall implements WorldShape {
             switch (keyEvent.getCode()) {
                 case UP:
                     arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
-                    
-                    if(arrowform.rx.getAngle()>360){
-                       arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
+
+                    if (arrowform.rx.getAngle() > 360) {
+                        arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
                     }
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
@@ -288,56 +325,73 @@ public class LaunchableBall implements WorldShape {
                     break;
                 case DOWN:
                     arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
-                    
-                    if(arrowform.rx.getAngle()<0){
-                       arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
+
+                    if (arrowform.rx.getAngle() < 0) {
+                        arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
                     }
-                    
+
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case RIGHT:
                     arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
-                    
-                    if(arrowform.ry.getAngle()>360){
-                       arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
+
+                    if (arrowform.ry.getAngle() > 360) {
+                        arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
                     }
-                    
+
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case LEFT:
                     arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
-                    
-                    if(arrowform.ry.getAngle()<0){
-                       arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
+
+                    if (arrowform.ry.getAngle() < 0) {
+                        arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
                     }
-                    
+
                     System.out.println("arrowform.rx.getAngle()-> " + arrowform.rx.getAngle());
                     System.out.println("arrowform.ry.getAngle()-> " + arrowform.ry.getAngle());
                     System.out.println("arrowform.rz.getAngle()-> " + arrowform.rz.getAngle());
                     break;
                 case ENTER:
-                    //vertical
-                    angleY = arrowform.rx.getAngle();
-                    //horizontal
-                    angleZ = arrowform.ry.getAngle();
-                    angleX =  90 - arrowform.ry.getAngle();
-                                        
-                    System.out.println("arrowform.rx.getAngle()-> " + angleX + " --- "+ Math.cos(Math.toRadians(angleX)));
-                    System.out.println("arrowform.ry.getAngle()-> " + angleY + " --- "+ Math.cos(Math.toRadians(angleY)));
-                    System.out.println("arrowform.rz.getAngle()-> " + angleZ + " --- "+ Math.cos(Math.toRadians(angleZ)));
-                    double inverter = (angleY >= 0 && angleY<=180) ? 1d : -1d;
-                    
-                    //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
-                    speed = 3d;
-                    speedX = speed * Math.cos(Math.toRadians(angleX))* inverter;
-                    speedY = speed * Math.cos(Math.toRadians(angleY));
-                    speedZ = speed * Math.cos(Math.toRadians(angleZ))* inverter;
-                    elementsGroup.getChildren().remove(arrowform);
-                    go = true;
+                    System.out.println("");
+                    if (keyPressed) {
+                        configuredForce = true;                        
+                        
+                        
+                        if((force.getValue() + directionArrow)<1 || (force.getValue() + directionArrow)>10){
+                            directionArrow = directionArrow*-1;
+                        }
+                        
+                        System.out.println("Direccion: "+ directionArrow + "--"+ force.getValue());
+                        System.out.println("Nuevo valor: "+ (force.getValue() + directionArrow));
+                        
+                        force.set(force.getValue() + directionArrow);
+                    } else {
+
+                        //vertical
+                        angleY = arrowform.rx.getAngle();
+                        //horizontal
+                        angleZ = arrowform.ry.getAngle();
+                        angleX = 90 - arrowform.ry.getAngle();
+
+                        System.out.println("arrowform.rx.getAngle()-> " + angleX + " --- " + Math.cos(Math.toRadians(angleX)));
+                        System.out.println("arrowform.ry.getAngle()-> " + angleY + " --- " + Math.cos(Math.toRadians(angleY)));
+                        System.out.println("arrowform.rz.getAngle()-> " + angleZ + " --- " + Math.cos(Math.toRadians(angleZ)));
+                        double inverter = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
+
+                        //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
+                        speed = 3d;
+                        speedX = speed * Math.cos(Math.toRadians(angleX)) * inverter;
+                        speedY = speed * Math.cos(Math.toRadians(angleY));
+                        speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverter;
+                        elementsGroup.getChildren().remove(arrowform);
+                        go = true;
+                    }
+
                     break;
 
             }
