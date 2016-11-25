@@ -87,6 +87,7 @@ public class DirectorMgr {
     }
 
     public void inputEventListener(KeyEvent event, boolean keyPressed) {
+        System.out.println("event.getCode()->"+ event.getCode()+ "-keyPressed:"+keyPressed);
         switch (event.getCode()) {
             case SPACE:
                 if (keyPressed) {
