@@ -14,8 +14,12 @@ import javafx.beans.value.ObservableValue;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.CullFace;
 import javafx.scene.shape.Cylinder;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
+import javafx.scene.shape.TriangleMesh;
 
 /**
  *
@@ -142,7 +146,6 @@ public class LaunchableBall implements WorldShape {
         final PhongMaterial greyMaterial = new PhongMaterial();
         greyMaterial.setDiffuseColor(Color.DARKGREY);
         greyMaterial.setSpecularColor(Color.GREY);
-
         arrowform = new Xform();
         cylinder = new Cylinder(arrowRadius, arrowHeight);
         //cylinder.heightProperty().
@@ -158,6 +161,38 @@ public class LaunchableBall implements WorldShape {
             }
         });
 
+        TriangleMesh triangleMesh = new TriangleMesh();
+        triangleMesh.getTexCoords().addAll(0, 0);
+
+        float h = 150;                    // Height
+        float s = 300;                    // Side
+        triangleMesh.getPoints().addAll(
+                0, 0, 0, // Point 0 - Top
+                0, h, -s / 2, // Point 1 - Front
+                -s / 2, h, 0, // Point 2 - Left
+                s / 2, h, 0, // Point 3 - Back
+                0, h, s / 2 // Point 4 - Right
+        );
+
+        triangleMesh.getFaces().addAll(
+                0, 0, 2, 0, 1, 0, // Front left face
+                0, 0, 1, 0, 3, 0, // Front right face
+                0, 0, 3, 0, 4, 0, // Back right face
+                0, 0, 4, 0, 2, 0, // Back left face
+                4, 0, 1, 0, 2, 0, // Bottom rear face
+                4, 0, 3, 0, 1, 0 // Bottom front face
+        );
+
+        MeshView pyramid = new MeshView(triangleMesh);
+        pyramid.setDrawMode(DrawMode.FILL);
+        pyramid.setMaterial(greyMaterial);
+         pyramid.setCullFace(CullFace.BACK);
+        pyramid.setTranslateX(200);
+        pyramid.setTranslateY(100);
+        pyramid.setTranslateZ(200);
+        arrowform.getChildren().add(pyramid);
+
+        //http://www.dummies.com/programming/java/javafx-add-a-mesh-object-to-a-3d-world/
         point = new Sphere(30);
         point.setMaterial(greyMaterial);
         point.setTranslateY(arrowHeight / 2);
@@ -300,91 +335,90 @@ public class LaunchableBall implements WorldShape {
 
     @Override
     public void handleInput(KeyEvent keyEvent, boolean keyPressed) {
-        
 
-            switch (keyEvent.getCode()) {
-                case UP:
-                    if(!keyPressed){
-                        return;
+        switch (keyEvent.getCode()) {
+            case UP:
+                if (!keyPressed) {
+                    return;
+                }
+                arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
+                arrowform.t.setY(cylinder.getHeight() / 2);
+                if (arrowform.rx.getAngle() > 360) {
+                    arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
+                }
+                point.setTranslateY(cylinder.getHeight());
+                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                arrowform.t.setY(0);
+                break;
+            case DOWN:
+                if (!keyPressed) {
+                    return;
+                }
+                arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
+                if (arrowform.rx.getAngle() < 0) {
+                    arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
+                }
+                point.setTranslateY(cylinder.getHeight());
+                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                arrowform.t.setY(0);
+                break;
+            case RIGHT:
+                if (!keyPressed) {
+                    return;
+                }
+                arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
+                if (arrowform.ry.getAngle() > 360) {
+                    arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
+                }
+                point.setTranslateY(cylinder.getHeight());
+                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                arrowform.t.setY(0);
+                break;
+            case LEFT:
+                if (!keyPressed) {
+                    return;
+                }
+                arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
+                if (arrowform.ry.getAngle() < 0) {
+                    arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
+                }
+                point.setTranslateY(cylinder.getHeight());
+                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                arrowform.t.setY(0);
+                break;
+            case ENTER:
+                if (go) {
+                    return;
+                }
+                if (keyPressed && !configuredForce) {
+                    System.out.println("keyPressed");
+                    if ((force.getValue() + directionArrow) < 1 || (force.getValue() + directionArrow) > 10) {
+                        directionArrow = directionArrow * -1;
                     }
-                    arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
-                    arrowform.t.setY(cylinder.getHeight() / 2);
-                    if (arrowform.rx.getAngle() > 360) {
-                        arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
-                    }
-                    point.setTranslateY(cylinder.getHeight());
-                    cylinder.setTranslateY(cylinder.getHeight() / 2);
-                    arrowform.t.setY(0);
-                    break;
-                case DOWN:
-                    if(!keyPressed){
-                        return;
-                    }
-                    arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
-                    if (arrowform.rx.getAngle() < 0) {
-                        arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
-                    }
-                    point.setTranslateY(cylinder.getHeight());
-                    cylinder.setTranslateY(cylinder.getHeight() / 2);
-                    arrowform.t.setY(0);
-                    break;
-                case RIGHT:
-                    if(!keyPressed){
-                        return;
-                    }
-                    arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
-                    if (arrowform.ry.getAngle() > 360) {
-                        arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
-                    }
-                    point.setTranslateY(cylinder.getHeight());
-                    cylinder.setTranslateY(cylinder.getHeight() / 2);
-                    arrowform.t.setY(0);
-                    break;
-                case LEFT:
-                    if(!keyPressed){
-                        return;
-                    }
-                    arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
-                    if (arrowform.ry.getAngle() < 0) {
-                        arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
-                    }
-                    point.setTranslateY(cylinder.getHeight());
-                    cylinder.setTranslateY(cylinder.getHeight() / 2);
-                    arrowform.t.setY(0);
-                    break;
-                case ENTER:
-                    if (go) {
-                        return;
-                    }
-                    if (keyPressed && !configuredForce) {
-                        System.out.println("keyPressed");
-                        if ((force.getValue() + directionArrow) < 1 || (force.getValue() + directionArrow) > 10) {
-                            directionArrow = directionArrow * -1;
-                        }
-                        force.set(force.getValue() + directionArrow);
-                    } else {
-                        System.out.println("NO keyPressed");
-                        configuredForce = true;
-                        //vertical
-                        angleY = arrowform.rx.getAngle();
-                        //horizontal
-                        angleZ = arrowform.ry.getAngle();
-                        angleX = 90 - arrowform.ry.getAngle();
-                        double inverter = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
+                    force.set(force.getValue() + directionArrow);
+                } else {
+                    System.out.println("NO keyPressed");
+                    configuredForce = true;
+                    //vertical
+                    angleY = arrowform.rx.getAngle();
+                    //horizontal
+                    angleZ = arrowform.ry.getAngle();
+                    angleX = 90 - arrowform.ry.getAngle();
+                    double inverter = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
 
-                        //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
-                        speed = 3d;
-                        speedX = speed * Math.cos(Math.toRadians(angleX)) * inverter;
-                        speedY = speed * Math.cos(Math.toRadians(angleY));
-                        speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverter;
-                        elementsGroup.getChildren().remove(arrowform);
-                        go = true;
-                    }
+                    //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
+                    speed = 3d;
+                    speedX = speed * Math.cos(Math.toRadians(angleX)) * inverter;
+                    speedY = speed * Math.cos(Math.toRadians(angleY));
+                    speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverter;
+                    elementsGroup.getChildren().remove(arrowform);
+                    go = true;
+                }
 
-                    break;
+                break;
 
-            }
-        
+        }
+
     }
 
     @Override
