@@ -22,6 +22,8 @@ public class DirectorMgr {
     private List<WorldShape> staticObjects = new ArrayList<>();
 
     private List<WorldShape> partialDynamicObjects = new ArrayList<>();
+    
+    private LaunchableBall launchableBallMain;
 
     //<editor-fold defaultstate="collapsed" desc="SINGLETON">
     private DirectorMgr() {
@@ -95,14 +97,19 @@ public class DirectorMgr {
                     LaunchableBall ball = new LaunchableBall();
                     ball.buildElements(SceneMgr.getInstance().getWorld());
                     ball.configure();
+                    launchableBallMain = ball;
                     partialDynamicObjects.add(ball);
                     break;
                 }
 
             default:
                 if (!partialDynamicObjects.isEmpty()) {
-                    partialDynamicObjects.get(partialDynamicObjects.size() - 1).handleInput(event, keyPressed);
+                    partialDynamicObjects.stream().forEach(t-> t.handleInput(event, keyPressed));
+                    //partialDynamicObjects.get(ball).handleInput(event, keyPressed);
                 }
+                
+                
+                
                 break;
 
         }
