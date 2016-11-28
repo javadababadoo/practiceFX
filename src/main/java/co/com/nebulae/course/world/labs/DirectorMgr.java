@@ -75,6 +75,20 @@ public class DirectorMgr {
         this.partialDynamicObjects = partialDynamicObjects;
     }
 
+    /**
+     * @return the launchableBallMain
+     */
+    public LaunchableBall getLaunchableBallMain() {
+        return launchableBallMain;
+    }
+
+    /**
+     * @param launchableBallMain the launchableBallMain to set
+     */
+    public void setLaunchableBallMain(LaunchableBall launchableBallMain) {
+        this.launchableBallMain = launchableBallMain;
+    }
+
     private static class ElementMgrHolder {
 
         private static final DirectorMgr INSTANCE = new DirectorMgr();
@@ -107,9 +121,7 @@ public class DirectorMgr {
                     partialDynamicObjects.stream().forEach(t-> t.handleInput(event, keyPressed));
                     //partialDynamicObjects.get(ball).handleInput(event, keyPressed);
                 }
-                
-                
-                
+
                 break;
 
         }

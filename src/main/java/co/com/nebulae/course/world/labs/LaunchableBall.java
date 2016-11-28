@@ -158,6 +158,7 @@ public class LaunchableBall implements WorldShape {
                 cylinder.setHeight(arrowHeight + (newValue.doubleValue() * 30));
                 point.setTranslateY(cylinder.getHeight());
                 cylinder.setTranslateY(cylinder.getHeight() / 2);
+                speed = newValue.doubleValue();
             }
         });
 
@@ -257,6 +258,8 @@ public class LaunchableBall implements WorldShape {
             speedX = speedX * (1 - frictionCoefficient);
             speedZ = speedZ * (1 - frictionCoefficient);
 
+            System.out.println("speedX -> "+ speedX);
+            System.out.println("speedY -> "+ speedZ);
             if (speedX <= 0.01) {
                 speedX = 0d;
             }
@@ -269,7 +272,9 @@ public class LaunchableBall implements WorldShape {
             speedY = speedY * 0.80 * -1;
 
             stopY = speedY < 0.6;
-
+            System.out.println("speedY -> "+ speedY);
+            System.out.println("stopY -> "+ stopY);
+            //go = false;
         } else {
             speedY += gravity * time;
         }
@@ -284,7 +289,7 @@ public class LaunchableBall implements WorldShape {
 
         if (ballform.t.getZ() <= -1000 || ballform.t.getZ() >= 1000) {
             directionZ = directionZ * -1;
-        }
+        }                
 
         traveledDistanceY = (speedY * time) + (0.5 * gravity * Math.pow(time, 2));
         traveledDistanceX = (speedX * time) * directionX;
@@ -293,6 +298,10 @@ public class LaunchableBall implements WorldShape {
         double y = ballform.t.getY() + traveledDistanceY;
         double x = ballform.t.getX() + traveledDistanceX;
 
+        System.out.println("z->"+ z);
+        System.out.println("y->"+ y);
+        System.out.println("x->"+ x);
+        
         if (y <= radius) {
             y = radius;
         }
@@ -339,7 +348,7 @@ public class LaunchableBall implements WorldShape {
 
         switch (keyEvent.getCode()) {
             case UP:
-                if (!keyPressed) {
+                if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
                     return;
                 }
                 arrowform.rx.setAngle(arrowform.rx.getAngle() + 1);
@@ -351,7 +360,7 @@ public class LaunchableBall implements WorldShape {
                 cylinder.setTranslateY(cylinder.getHeight() / 2);
                 break;
             case DOWN:
-                if (!keyPressed) {
+                if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
                     return;
                 }
                 arrowform.rx.setAngle(arrowform.rx.getAngle() - 1);
@@ -362,7 +371,7 @@ public class LaunchableBall implements WorldShape {
                 cylinder.setTranslateY(cylinder.getHeight() / 2);
                 break;
             case RIGHT:
-                if (!keyPressed) {
+                if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
                     return;
                 }
                 arrowform.ry.setAngle(arrowform.ry.getAngle() + 1);
@@ -373,7 +382,7 @@ public class LaunchableBall implements WorldShape {
                 cylinder.setTranslateY(cylinder.getHeight() / 2);
                 break;
             case LEFT:
-                if (!keyPressed) {
+                if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
                     return;
                 }
                 arrowform.ry.setAngle(arrowform.ry.getAngle() - 1);
@@ -409,16 +418,22 @@ public class LaunchableBall implements WorldShape {
         //horizontal
         angleZ = arrowform.ry.getAngle();
         angleX = 90 - arrowform.ry.getAngle();
-        double inverter = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
+        //double inverterX = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
 
-        double inverterX = Math.sin(Math.toRadians(angleX));
-        double inverterZ = Math.sin(Math.toRadians(angleZ));
+        double inverterX = Math.sin(Math.toRadians(angleY));
+        //double inverterZ = Math.sin(Math.toRadians(angleZ));
 
         //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
-        speed = 3d;
-        speedX = speed * Math.cos(Math.toRadians(angleX)) * inverter;
+        //speed = 3d;
+        speedX = speed *  Math.cos(Math.toRadians(angleX)) * inverterX;
         speedY = speed * Math.cos(Math.toRadians(angleY));
-        speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverter;
+        speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverterX;
+        
+        System.out.println("inverterX-> "+ inverterX);
+        System.out.println("inverter speedX-> "+ speedX);
+        System.out.println("inverter speedz-> "+ speedZ);
+        System.out.println("inverter speedZ-> "+ speedZ);
+        
         elementsGroup.getChildren().remove(arrowform);
         go = true;
     }
