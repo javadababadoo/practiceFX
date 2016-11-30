@@ -31,6 +31,8 @@ public class LaunchableBall implements WorldShape {
     final Xform elementsGroup = new Xform();
 
     //<editor-fold defaultstate="collapsed" desc="ARROW">
+    private MeshView pyramid;
+
     private Xform arrowform;
 
     private Cylinder cylinder;
@@ -156,15 +158,33 @@ public class LaunchableBall implements WorldShape {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 cylinder.setHeight(arrowHeight + (newValue.doubleValue() * 30));
-                point.setTranslateY(cylinder.getHeight());
-                cylinder.setTranslateY(cylinder.getHeight() / 2);
-                speed = newValue.doubleValue();
+                changePositionElement();
+                speed = newValue.doubleValue(); 
             }
         });
 
-//        TriangleMesh triangleMesh = new TriangleMesh();
-//        triangleMesh.getTexCoords().addAll(0, 0);
-//        float h = 50;                    // Height
+        TriangleMesh triangleMesh = new TriangleMesh();
+        triangleMesh.getTexCoords().addAll(0, 0);
+
+        float h = 40;                       // Side
+        triangleMesh.getPoints().addAll(
+                -h, 0, -h, // Point 0 - Top
+                -h, 0, h, // Point 1 - Front
+                h, 0, h, // Point 2 - Left
+                h, 0, -h, // Point 3 - Back
+                0, h * 2, 0 // Point 4 - Right
+        );
+
+        triangleMesh.getFaces().addAll(
+                0, 0, 3, 0, 1, 0, // Front left face
+                1, 0, 3, 0, 2, 0, // Front right face
+                0, 0, 1, 0, 4, 0, // Back right face
+                1, 0, 2, 0, 4, 0, // Back left face
+                2, 0, 3, 0, 4, 0, // Bottom rear face
+                3, 0, 0, 0, 4, 0 // Bottom front face
+        );
+
+//        float h = 20;                    // Height
 //        float s = 100;                    // Side
 //        triangleMesh.getPoints().addAll(
 //                0, 0, 0, // Point 0 - Top
@@ -175,27 +195,27 @@ public class LaunchableBall implements WorldShape {
 //        );
 //
 //        triangleMesh.getFaces().addAll(
-//                0, 0, 2, 0, 1, 0, // Front left face
-//                0, 0, 1, 0, 3, 0, // Front right face
-//                0, 0, 3, 0, 4, 0, // Back right face
-//                0, 0, 4, 0, 2, 0, // Back left face
-//                4, 0, 1, 0, 2, 0, // Bottom rear face
-//                4, 0, 3, 0, 1, 0 // Bottom front face
+//                0, 0, 3, 0, 1, 0, 
+//                1, 0, 3, 0, 2, 0,
+//                0, 0, 1, 0, 4, 0, 
+//                0, 0, 3, 0, 4, 0, 
+//                3, 0, 2, 0, 4, 0,
+//                2, 0, 1, 0, 4, 0 
 //        );
 //
-//        MeshView pyramid = new MeshView(triangleMesh);
-//        pyramid.setDrawMode(DrawMode.FILL);
-//        pyramid.setMaterial(greyMaterial);
-//        pyramid.setTranslateX(0);
-//        pyramid.setTranslateY(0);
-//        pyramid.setTranslateZ(0);
-//        arrowform.getChildren().add(pyramid);
+        pyramid = new MeshView(triangleMesh);
+        pyramid.setDrawMode(DrawMode.FILL);
+        pyramid.setMaterial(greyMaterial);
+        pyramid.setTranslateX(0);
+        pyramid.setTranslateY(arrowHeight / 2);
+        pyramid.setTranslateZ(0);
+        arrowform.getChildren().add(pyramid);
         //http://www.dummies.com/programming/java/javafx-add-a-mesh-object-to-a-3d-world/
         point = new Sphere(30);
         point.setMaterial(greyMaterial);
         point.setTranslateY(arrowHeight / 2);
         arrowform.getChildren().add(cylinder);
-        arrowform.getChildren().add(point);
+        //arrowform.getChildren().add(point);
 
         final PhongMaterial redMaterial = new PhongMaterial();
         redMaterial.setDiffuseColor(Color.DARKORANGE);
@@ -244,6 +264,7 @@ public class LaunchableBall implements WorldShape {
 
         System.out.println("arrowform.t.getY()-> " + arrowform.t.getY());
         point.setTranslateY(cylinder.getHeight());
+        pyramid.setTranslateY(cylinder.getHeight());
         cylinder.setTranslateY(cylinder.getHeight() / 2);
         //go = true;
         finish = false;
@@ -258,13 +279,13 @@ public class LaunchableBall implements WorldShape {
             speedX = speedX * (1 - frictionCoefficient);
             speedZ = speedZ * (1 - frictionCoefficient);
 
-            System.out.println("speedX -> "+ speedX);
-            System.out.println("speedY -> "+ speedZ);
-            if (speedX <= 0.01) {
+            System.out.println("speedX -> " + speedX);
+            System.out.println("speedY -> " + speedZ);
+            if (Math.abs(speedX) <= 0.01) {
                 speedX = 0d;
             }
 
-            if (speedZ <= 0.01) {
+            if (Math.abs(speedZ) <= 0.01) {
                 speedZ = 0d;
             }
 
@@ -272,8 +293,8 @@ public class LaunchableBall implements WorldShape {
             speedY = speedY * 0.80 * -1;
 
             stopY = speedY < 0.6;
-            System.out.println("speedY -> "+ speedY);
-            System.out.println("stopY -> "+ stopY);
+            System.out.println("speedY -> " + speedY);
+            System.out.println("stopY -> " + stopY);
             //go = false;
         } else {
             speedY += gravity * time;
@@ -289,7 +310,7 @@ public class LaunchableBall implements WorldShape {
 
         if (ballform.t.getZ() <= -1000 || ballform.t.getZ() >= 1000) {
             directionZ = directionZ * -1;
-        }                
+        }
 
         traveledDistanceY = (speedY * time) + (0.5 * gravity * Math.pow(time, 2));
         traveledDistanceX = (speedX * time) * directionX;
@@ -298,10 +319,10 @@ public class LaunchableBall implements WorldShape {
         double y = ballform.t.getY() + traveledDistanceY;
         double x = ballform.t.getX() + traveledDistanceX;
 
-        System.out.println("z->"+ z);
-        System.out.println("y->"+ y);
-        System.out.println("x->"+ x);
-        
+        System.out.println("z->" + z);
+        System.out.println("y->" + y);
+        System.out.println("x->" + x);
+
         if (y <= radius) {
             y = radius;
         }
@@ -356,8 +377,7 @@ public class LaunchableBall implements WorldShape {
                 if (arrowform.rx.getAngle() > 360) {
                     arrowform.rx.setAngle(arrowform.rx.getAngle() - 360);
                 }
-                point.setTranslateY(cylinder.getHeight());
-                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                changePositionElement();
                 break;
             case DOWN:
                 if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
@@ -367,8 +387,7 @@ public class LaunchableBall implements WorldShape {
                 if (arrowform.rx.getAngle() < 0) {
                     arrowform.rx.setAngle(360 + arrowform.rx.getAngle());
                 }
-                point.setTranslateY(cylinder.getHeight());
-                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                changePositionElement();
                 break;
             case RIGHT:
                 if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
@@ -378,8 +397,7 @@ public class LaunchableBall implements WorldShape {
                 if (arrowform.ry.getAngle() > 360) {
                     arrowform.ry.setAngle(arrowform.ry.getAngle() - 360);
                 }
-                point.setTranslateY(cylinder.getHeight());
-                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                changePositionElement();
                 break;
             case LEFT:
                 if (!keyPressed && DirectorMgr.getInstance().getLaunchableBallMain() == this) {
@@ -389,8 +407,7 @@ public class LaunchableBall implements WorldShape {
                 if (arrowform.ry.getAngle() < 0) {
                     arrowform.ry.setAngle(360 + arrowform.ry.getAngle());
                 }
-                point.setTranslateY(cylinder.getHeight());
-                cylinder.setTranslateY(cylinder.getHeight() / 2);
+                changePositionElement();
                 break;
             case ENTER:
                 if (go) {
@@ -425,17 +442,23 @@ public class LaunchableBall implements WorldShape {
 
         //TODO: Si angulo en y es 0 o 180 no hay velocidad en horizontal (EVALUAR)
         //speed = 3d;
-        speedX = speed *  Math.cos(Math.toRadians(angleX)) * inverterX;
+        speedX = speed * Math.cos(Math.toRadians(angleX)) * inverterX;
         speedY = speed * Math.cos(Math.toRadians(angleY));
         speedZ = speed * Math.cos(Math.toRadians(angleZ)) * inverterX;
-        
-        System.out.println("inverterX-> "+ inverterX);
-        System.out.println("inverter speedX-> "+ speedX);
-        System.out.println("inverter speedz-> "+ speedZ);
-        System.out.println("inverter speedZ-> "+ speedZ);
-        
+
+        System.out.println("inverterX-> " + inverterX);
+        System.out.println("inverter speedX-> " + speedX);
+        System.out.println("inverter speedz-> " + speedZ);
+        System.out.println("inverter speedZ-> " + speedZ);
+
         elementsGroup.getChildren().remove(arrowform);
         go = true;
+    }
+
+    private void changePositionElement() {
+        point.setTranslateY(cylinder.getHeight());
+        pyramid.setTranslateY(cylinder.getHeight());
+        cylinder.setTranslateY(cylinder.getHeight() / 2);
     }
 
     @Override
