@@ -22,11 +22,12 @@ public class DirectorMgr {
     private List<WorldShape> staticObjects = new ArrayList<>();
 
     private List<WorldShape> partialDynamicObjects = new ArrayList<>();
-    
+
     private LaunchableBall launchableBallMain;
 
     //<editor-fold defaultstate="collapsed" desc="SINGLETON">
     private DirectorMgr() {
+        buildWorld();
     }
 
     public static DirectorMgr getInstance() {
@@ -95,7 +96,21 @@ public class DirectorMgr {
     }
     //</editor-fold>
 
+    private void buildWorld() {
+        buildTank();
+    }
+
+    public void buildTank() {
+        Tank tank = new Tank();
+        tank.buildElements(SceneMgr.getInstance().getWorld());
+        dynamicObjects.add(tank);
+    }
+
     public void handleGameLoop(Long time) {
+        dynamicObjects.stream().forEach((worldShape) -> {
+            worldShape.redraw(time);
+        });
+
         partialDynamicObjects.stream().forEach((worldShape) -> {
             worldShape.redraw(time);
         });
@@ -103,22 +118,27 @@ public class DirectorMgr {
     }
 
     public void inputEventListener(KeyEvent event, boolean keyPressed) {
-        System.out.println("event.getCode()->"+ event.getCode()+ "-keyPressed:"+keyPressed);
+        System.out.println("event.getCode()->" + event.getCode() + "-keyPressed:" + keyPressed);
+
         switch (event.getCode()) {
-            case SPACE:
-                if (keyPressed) {
-                    System.out.println("keyPressed->"+ keyPressed);
-                    LaunchableBall ball = new LaunchableBall();
-                    ball.buildElements(SceneMgr.getInstance().getWorld());
-                    ball.configure();
-                    launchableBallMain = ball;
-                    partialDynamicObjects.add(ball);
-                    break;
-                }
+//            case SPACE:
+//                if (keyPressed) {
+//                    System.out.println("keyPressed->"+ keyPressed);
+//                    LaunchableBall ball = new LaunchableBall();
+//                    ball.buildElements(SceneMgr.getInstance().getWorld());
+//                    ball.configure();
+//                    launchableBallMain = ball;
+//                    partialDynamicObjects.add(ball);
+//                    break;
+//                }
 
             default:
+                if (!dynamicObjects.isEmpty()) {
+                    dynamicObjects.stream().forEach(t -> t.handleInput(event, keyPressed));
+                }
+
                 if (!partialDynamicObjects.isEmpty()) {
-                    partialDynamicObjects.stream().forEach(t-> t.handleInput(event, keyPressed));
+                    partialDynamicObjects.stream().forEach(t -> t.handleInput(event, keyPressed));
                     //partialDynamicObjects.get(ball).handleInput(event, keyPressed);
                 }
 
