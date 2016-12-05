@@ -114,6 +114,8 @@ public class Tank implements WorldShape {
 
         tankForm.t.setZ(z);
         tankForm.t.setX(x);
+        DirectorMgr.getInstance().setPositionXTank(x);
+        DirectorMgr.getInstance().setPositionZTank(z);
     }
 
     @Override
@@ -156,6 +158,10 @@ public class Tank implements WorldShape {
                 if (canonForm.rx.getAngle() > 360) {
                     canonForm.rx.setAngle(canonForm.rx.getAngle() - 360);
                 }
+                DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
+                DirectorMgr.getInstance().setAngleY(90 - canonForm.rx.getAngle());
+                
+                
                 changeCanonPosition();
                 break;
             case DOWN:
@@ -163,6 +169,8 @@ public class Tank implements WorldShape {
                 if (canonForm.rx.getAngle() < 0) {
                     canonForm.rx.setAngle(360 + canonForm.rx.getAngle());
                 }
+                DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
+                DirectorMgr.getInstance().setAngleY(90 - canonForm.rx.getAngle());
                 changeCanonPosition();
                 break;
             case RIGHT:
@@ -170,6 +178,8 @@ public class Tank implements WorldShape {
                 if (canonForm.ry.getAngle() < 0) {
                     canonForm.ry.setAngle(360 - canonForm.ry.getAngle());
                 }
+                DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle());
+
                 changeCanonPosition();
                 break;
             case LEFT:
@@ -177,6 +187,7 @@ public class Tank implements WorldShape {
                 if (canonForm.ry.getAngle() > 360) {
                     canonForm.ry.setAngle(canonForm.ry.getAngle() - 360);
                 }
+                DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle());
                 changeCanonPosition();
                 break;
         }

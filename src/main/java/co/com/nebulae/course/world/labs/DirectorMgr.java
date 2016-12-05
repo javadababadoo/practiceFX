@@ -25,6 +25,14 @@ public class DirectorMgr {
 
     private LaunchableBall launchableBallMain;
 
+    private Double angleX = 0d;
+    private Double angleY = 0d;
+    private Double angleZ = 0d;
+    
+    private Double positionXTank = 0d;
+    private Double positionYTank = 0d;
+    private Double positionZTank = 0d;
+
     //<editor-fold defaultstate="collapsed" desc="SINGLETON">
     private DirectorMgr() {
         buildWorld();
@@ -90,6 +98,90 @@ public class DirectorMgr {
         this.launchableBallMain = launchableBallMain;
     }
 
+    /**
+     * @return the angleX
+     */
+    public Double getAngleX() {
+        return angleX;
+    }
+
+    /**
+     * @param angleX the angleX to set
+     */
+    public void setAngleX(Double angleX) {
+        this.angleX = angleX;
+    }
+
+    /**
+     * @return the angleY
+     */
+    public Double getAngleY() {
+        return angleY;
+    }
+
+    /**
+     * @param angleY the angleY to set
+     */
+    public void setAngleY(Double angleY) {
+        this.angleY = angleY;
+    }
+
+    /**
+     * @return the angleZ
+     */
+    public Double getAngleZ() {
+        return angleZ;
+    }
+
+    /**
+     * @param angleZ the angleZ to set
+     */
+    public void setAngleZ(Double angleZ) {
+        this.angleZ = angleZ;
+    }
+
+    /**
+     * @return the positionXTank
+     */
+    public Double getPositionXTank() {
+        return positionXTank;
+    }
+
+    /**
+     * @param positionXTank the positionXTank to set
+     */
+    public void setPositionXTank(Double positionXTank) {
+        this.positionXTank = positionXTank;
+    }
+
+    /**
+     * @return the positionYTank
+     */
+    public Double getPositionYTank() {
+        return positionYTank;
+    }
+
+    /**
+     * @param positionYTank the positionYTank to set
+     */
+    public void setPositionYTank(Double positionYTank) {
+        this.positionYTank = positionYTank;
+    }
+
+    /**
+     * @return the positionZTank
+     */
+    public Double getPositionZTank() {
+        return positionZTank;
+    }
+
+    /**
+     * @param positionZTank the positionZTank to set
+     */
+    public void setPositionZTank(Double positionZTank) {
+        this.positionZTank = positionZTank;
+    }
+
     private static class ElementMgrHolder {
 
         private static final DirectorMgr INSTANCE = new DirectorMgr();
@@ -118,19 +210,19 @@ public class DirectorMgr {
     }
 
     public void inputEventListener(KeyEvent event, boolean keyPressed) {
-        
 
         switch (event.getCode()) {
-//            case SPACE:
-//                if (keyPressed) {
-//                    System.out.println("keyPressed->"+ keyPressed);
-//                    LaunchableBall ball = new LaunchableBall();
-//                    ball.buildElements(SceneMgr.getInstance().getWorld());
-//                    ball.configure();
-//                    launchableBallMain = ball;
-//                    partialDynamicObjects.add(ball);
-//                    break;
-//                }
+            case SPACE:
+                if (keyPressed) {
+                    System.out.println("keyPressed->"+ keyPressed);
+                    Bullet bullet = new Bullet();
+                    bullet.buildElements(SceneMgr.getInstance().getWorld());
+                    bullet.shot();
+                    
+                    partialDynamicObjects.add(bullet);
+                    break;
+                }
+
 
             default:
                 if (!dynamicObjects.isEmpty()) {
