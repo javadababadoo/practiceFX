@@ -24,7 +24,7 @@ public class CameraMgr {
     private final Xform cameraXform_1_xy_r = new Xform();
     private final Xform cameraXform_2_xy_t = new Xform();
     private final Xform cameraXform_3_z_r = new Xform();
-    private final double cameraDistance = 2600;
+    private final double cameraDistance = 5600;
 
     //<editor-fold defaultstate="collapsed" desc="SINGLETON">
     private CameraMgr() {

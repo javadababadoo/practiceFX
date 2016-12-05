@@ -31,18 +31,34 @@ public class Tank implements WorldShape {
 
     //<editor-fold defaultstate="collapsed" desc="TANK">
     private Xform tankForm;
-    
+
     private Xform canonForm;
 
     private Box body;
-    
+
     private Cylinder canon;
-    
+
     private double width = 200;
-    
+
     private double height = 100;
-    
+
     private double depth = 400;
+
+    private Double speedXTank = 0d;
+
+    private Double speedZTank = 0d;
+
+    private Double angleXTank = 0d;
+    private Double angleYTank = 0d;
+    private Double angleZTank = 0d;
+
+    private Double speed = 0d;
+
+    private Double traveledDistanceX = 0d;
+    private Double traveledDistanceZ = 0d;
+
+    private Double directionX = 1d;
+    private Double directionZ = 1d;
 
     //</editor-fold>
     public void buildElements(Xform world) {
@@ -55,13 +71,12 @@ public class Tank implements WorldShape {
 
         body = new Box(width, height, depth);
         body.setMaterial(material);
-        //tankForm.getChildren().add(body);
-        tankForm.t.setY(height/2);
+        tankForm.getChildren().add(body);
+        tankForm.t.setY(height / 2);
         tankForm.t.setX(0);
         tankForm.t.setZ(0);
-        
-        
-        canon = new Cylinder(width/4, height*3);
+
+        canon = new Cylinder(width / 4, height * 3);
         canon.setMaterial(material);
         canon.setTranslateY(canon.getHeight() / 2);
         canonForm.getChildren().add(canon);
@@ -69,11 +84,11 @@ public class Tank implements WorldShape {
         canonForm.t.setX(0);
         canonForm.t.setZ(0);
         tankForm.getChildren().add(canonForm);
-        
+
         elementsGroup.getChildren().add(tankForm);
         world.getChildren().addAll(elementsGroup);
-        System.out.println("canonForm.t -> "+ canonForm.t.getY());
-        System.out.println("canon -> "+ canon.getTranslateY());
+        System.out.println("canonForm.t -> " + canonForm.t.getY());
+        System.out.println("canon -> " + canon.getTranslateY());
     }
 
     @Override
@@ -88,7 +103,17 @@ public class Tank implements WorldShape {
 
     @Override
     public void redraw(Long time) {
-        
+        move(time);
+    }
+
+    public void move(Long time) {
+        traveledDistanceX = (speedXTank * time) * directionX;
+        traveledDistanceZ = (speedZTank * time) * directionZ;
+        double z = tankForm.t.getZ() + traveledDistanceZ;
+        double x = tankForm.t.getX() + traveledDistanceX;
+
+        tankForm.t.setZ(z);
+        tankForm.t.setX(x);
     }
 
     @Override
@@ -96,31 +121,36 @@ public class Tank implements WorldShape {
         switch (keyEvent.getCode()) {
             //TANK
             case W:
-                tankForm.rx.setAngle(tankForm.rx.getAngle() + 1);
-                if (tankForm.rx.getAngle() > 360) {
-                    tankForm.rx.setAngle(tankForm.rx.getAngle() - 360);
-                }
+
+//                tankForm.rx.setAngle(tankForm.rx.getAngle() + 1);
+//                if (tankForm.rx.getAngle() > 360) {
+//                    tankForm.rx.setAngle(tankForm.rx.getAngle() - 360);
+//                }
+                moveForward(keyPressed, true);
                 break;
             case S:
-                tankForm.rx.setAngle(tankForm.rx.getAngle() -1);
-                if (tankForm.rx.getAngle() < 0) {
-                    tankForm.rx.setAngle(360 + tankForm.rx.getAngle());
-                }
+//                tankForm.rx.setAngle(tankForm.rx.getAngle() -1);
+//                if (tankForm.rx.getAngle() < 0) {
+//                    tankForm.rx.setAngle(360 + tankForm.rx.getAngle());
+//                }
+                moveForward(keyPressed, false);
                 break;
             case A:
-                tankForm.ry.setAngle(tankForm.ry.getAngle() -1);
+                tankForm.ry.setAngle(tankForm.ry.getAngle() - 1);
                 if (tankForm.ry.getAngle() < 0) {
                     tankForm.ry.setAngle(360 - tankForm.ry.getAngle());
                 }
+                moveForward(keyPressed, null);
                 break;
             case D:
                 tankForm.ry.setAngle(tankForm.ry.getAngle() + 1);
                 if (tankForm.ry.getAngle() > 360) {
                     tankForm.ry.setAngle(tankForm.ry.getAngle() - 360);
                 }
+                moveForward(keyPressed, null);
                 break;
 
-           //CANON
+            //CANON
             case UP:
                 canonForm.rx.setAngle(canonForm.rx.getAngle() + 1);
                 if (canonForm.rx.getAngle() > 360) {
@@ -129,20 +159,20 @@ public class Tank implements WorldShape {
                 changeCanonPosition();
                 break;
             case DOWN:
-                canonForm.rx.setAngle(canonForm.rx.getAngle() -1);
+                canonForm.rx.setAngle(canonForm.rx.getAngle() - 1);
                 if (canonForm.rx.getAngle() < 0) {
                     canonForm.rx.setAngle(360 + canonForm.rx.getAngle());
                 }
                 changeCanonPosition();
                 break;
-            case LEFT:
-                canonForm.ry.setAngle(canonForm.ry.getAngle() -1);
+            case RIGHT:
+                canonForm.ry.setAngle(canonForm.ry.getAngle() - 1);
                 if (canonForm.ry.getAngle() < 0) {
                     canonForm.ry.setAngle(360 - canonForm.ry.getAngle());
                 }
                 changeCanonPosition();
                 break;
-            case RIGHT:
+            case LEFT:
                 canonForm.ry.setAngle(canonForm.ry.getAngle() + 1);
                 if (canonForm.ry.getAngle() > 360) {
                     canonForm.ry.setAngle(canonForm.ry.getAngle() - 360);
@@ -151,9 +181,31 @@ public class Tank implements WorldShape {
                 break;
         }
     }
-    
+
+    private void moveForward(boolean keyPressed, Boolean forward) {
+        if(!keyPressed && forward == null){
+            return;
+        }
+        
+        if (!keyPressed) {
+            speed = 0d;
+            speedXTank = 0d;
+            speedZTank = 0d;
+            return;
+        }
+        //angleYTank = tankForm.rx.getAngle();
+        angleZTank = tankForm.ry.getAngle();
+        angleXTank = 90 - tankForm.ry.getAngle();
+
+        speed = forward == null ? speed : 1d;
+        speedXTank = speed * Math.cos(Math.toRadians(angleXTank));
+        speedZTank = speed * Math.cos(Math.toRadians(angleZTank));
+        directionX = forward != null ? (forward ? 1d: -1d): directionX;
+        directionZ = forward != null ? (forward ? 1d: -1d): directionX;
+    }
+
     /**
-     * 
+     *
      */
     private void changeCanonPosition() {
         canon.setTranslateY(canon.getHeight() / 2);
