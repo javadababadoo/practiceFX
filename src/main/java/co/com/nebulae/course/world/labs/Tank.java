@@ -6,6 +6,9 @@
 package co.com.nebulae.course.world.labs;
 
 import co.com.nebulae.course.entity.Xform;
+import java.util.HashMap;
+import java.util.Map;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -28,6 +31,8 @@ public class Tank implements WorldShape {
     private final Xform elementsGroup = new Xform();
 
     private final PhongMaterial material = new PhongMaterial();
+
+    private Map<KeyCode, Boolean> movement = new HashMap<>();
 
     //<editor-fold defaultstate="collapsed" desc="TANK">
     private Xform tankForm;
@@ -123,34 +128,36 @@ public class Tank implements WorldShape {
         switch (keyEvent.getCode()) {
             //TANK
             case W:
-
-//                tankForm.rx.setAngle(tankForm.rx.getAngle() + 1);
-//                if (tankForm.rx.getAngle() > 360) {
-//                    tankForm.rx.setAngle(tankForm.rx.getAngle() - 360);
-//                }
-                moveForward(keyPressed, true);
-                break;
             case S:
-//                tankForm.rx.setAngle(tankForm.rx.getAngle() -1);
-//                if (tankForm.rx.getAngle() < 0) {
-//                    tankForm.rx.setAngle(360 + tankForm.rx.getAngle());
-//                }
-                moveForward(keyPressed, false);
-                break;
             case A:
-                tankForm.ry.setAngle(tankForm.ry.getAngle() - 1);
-                if (tankForm.ry.getAngle() < 0) {
-                    tankForm.ry.setAngle(360 - tankForm.ry.getAngle());
-                }
-                moveForward(keyPressed, null);
-                break;
             case D:
-                tankForm.ry.setAngle(tankForm.ry.getAngle() + 1);
-                if (tankForm.ry.getAngle() > 360) {
-                    tankForm.ry.setAngle(tankForm.ry.getAngle() - 360);
-                }
-                moveForward(keyPressed, null);
+                movement.put(keyEvent.getCode(), keyPressed);
+                moveForward();
                 break;
+        }
+
+        switch (keyEvent.getCode()) {
+            //TANK
+//            case W:
+//                moveForward(keyPressed, true);
+//                break;
+//            case S:
+//                moveForward(keyPressed, false);
+//                break;
+//            case A:
+//                tankForm.ry.setAngle(tankForm.ry.getAngle() - 1);
+//                if (tankForm.ry.getAngle() < 0) {
+//                    tankForm.ry.setAngle(360 - tankForm.ry.getAngle());
+//                }
+//                moveForward(keyPressed, null);
+//                break;
+//            case D:
+//                tankForm.ry.setAngle(tankForm.ry.getAngle() + 1);
+//                if (tankForm.ry.getAngle() > 360) {
+//                    tankForm.ry.setAngle(tankForm.ry.getAngle() - 360);
+//                }
+//                moveForward(keyPressed, null);
+//                break;
 
             //CANON
             case UP:
@@ -160,8 +167,7 @@ public class Tank implements WorldShape {
                 }
                 DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
                 DirectorMgr.getInstance().setAngleY(90 - canonForm.rx.getAngle());
-                
-                
+
                 changeCanonPosition();
                 break;
             case DOWN:
@@ -193,28 +199,77 @@ public class Tank implements WorldShape {
         }
     }
 
-    private void moveForward(boolean keyPressed, Boolean forward) {
-        if(!keyPressed && forward == null){
-            return;
-        }
+    private void moveForward() {
+        speed = 0d;
+        speedXTank = 0d;
+        speedZTank = 0d;
+        Boolean forward = movement.get(KeyCode.W);
+
+        Boolean back = movement.get(KeyCode.S);
+
+        Boolean right = movement.get(KeyCode.D);
+
+        Boolean left = movement.get(KeyCode.A);
+
+        System.out.println("forward: "+ forward+ " -- back: "+ back+ " -- Right: "+right+ " -- Left: "+ left );
         
-        if (!keyPressed) {
-            speed = 0d;
-            speedXTank = 0d;
-            speedZTank = 0d;
-            return;
+        if (forward != null && forward) {
+            speed = 1d;
+            directionX = 1d;
+            directionZ = 1d;
         }
+
+        if (back != null && back) {
+            speed = 1d;
+            directionX = -1d;
+            directionZ = -1d;
+        }
+
+        if (right != null && right) {
+            tankForm.ry.setAngle(tankForm.ry.getAngle() - 1);
+            if (tankForm.ry.getAngle() < 0) {
+                tankForm.ry.setAngle(360 - tankForm.ry.getAngle());
+            }
+        }
+
+        if (left != null && left) {
+            tankForm.ry.setAngle(tankForm.ry.getAngle() + 1);
+            if (tankForm.ry.getAngle() > 360) {
+                tankForm.ry.setAngle(tankForm.ry.getAngle() - 360);
+            }
+        }
+
+        
+        
         //angleYTank = tankForm.rx.getAngle();
         angleZTank = tankForm.ry.getAngle();
         angleXTank = 90 - tankForm.ry.getAngle();
 
-        speed = forward == null ? speed : 1d;
         speedXTank = speed * Math.cos(Math.toRadians(angleXTank));
         speedZTank = speed * Math.cos(Math.toRadians(angleZTank));
-        directionX = forward != null ? (forward ? 1d: -1d): directionX;
-        directionZ = forward != null ? (forward ? 1d: -1d): directionX;
     }
 
+//    private void moveForward(boolean keyPressed, Boolean forward) {
+//        if (!keyPressed && forward == null) {
+//            return;
+//        }
+//
+//        if (!keyPressed) {
+//            speed = 0d;
+//            speedXTank = 0d;
+//            speedZTank = 0d;
+//            return;
+//        }
+//        //angleYTank = tankForm.rx.getAngle();
+//        angleZTank = tankForm.ry.getAngle();
+//        angleXTank = 90 - tankForm.ry.getAngle();
+//
+//        speed = forward == null ? speed : 1d;
+//        speedXTank = speed * Math.cos(Math.toRadians(angleXTank));
+//        speedZTank = speed * Math.cos(Math.toRadians(angleZTank));
+//        directionX = forward != null ? (forward ? 1d : -1d) : directionX;
+//        directionZ = forward != null ? (forward ? 1d : -1d) : directionX;
+//    }
     /**
      *
      */

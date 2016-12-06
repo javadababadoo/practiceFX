@@ -28,17 +28,7 @@ public class Bullet implements WorldShape {
     final Xform elementsGroup = new Xform();
 
     //<editor-fold defaultstate="collapsed" desc="ARROW">
-    private Sphere point;
 
-    private Double arrowRadius = 20d;
-
-    private Double arrowHeight = 100d;
-
-    private Double angleYArrow;
-
-    private Double angleXArrow;
-
-    private Double angleZArrow;
 
     //</editor-fold>
     //<editor-fold defaultstate="collapsed" desc="LAUNCHBALL">
@@ -65,9 +55,8 @@ public class Bullet implements WorldShape {
     private Boolean stopY = false;
     private Boolean go = false;
     private Boolean finish = false;
-    private Double radius = 25d;
-    private Double frictionCoefficient = 0.005d;
-    private Double directionArrow = 1d;
+    private final Double radius = 45d;
+    private final Double frictionCoefficient = 0.005d;
 
     //</editor-fold>
 
@@ -133,19 +122,11 @@ public class Bullet implements WorldShape {
         Log.print("build bullet ... ");
 
         final PhongMaterial greyMaterial = new PhongMaterial();
-        greyMaterial.setDiffuseColor(Color.DARKGREY);
-        greyMaterial.setSpecularColor(Color.GREY);
-
-        point = new Sphere(30);
-        point.setMaterial(greyMaterial);
-        point.setTranslateY(arrowHeight / 2);
-
-        final PhongMaterial redMaterial = new PhongMaterial();
-        redMaterial.setDiffuseColor(Color.DARKORANGE);
-        redMaterial.setSpecularColor(Color.ORANGE);
+        greyMaterial.setDiffuseColor(Color.DARKRED);
+        greyMaterial.setSpecularColor(Color.RED);
 
         oxygenSphere = new Sphere(radius);
-        oxygenSphere.setMaterial(redMaterial);
+        oxygenSphere.setMaterial(greyMaterial);
         ballform.getChildren().add(oxygenSphere);
 
         elementsGroup.getChildren().add(ballform);
@@ -166,24 +147,15 @@ public class Bullet implements WorldShape {
         if (ballform.t.getY() <= radius) {
             speedX = speedX * (1 - frictionCoefficient);
             speedZ = speedZ * (1 - frictionCoefficient);
-
-            System.out.println("speedX -> " + speedX);
-            System.out.println("speedY -> " + speedZ);
             if (Math.abs(speedX) <= 0.01) {
                 speedX = 0d;
             }
-
             if (Math.abs(speedZ) <= 0.01) {
                 speedZ = 0d;
             }
-
             speedY += gravity * time;
             speedY = speedY * 0.80 * -1;
-
             stopY = speedY < 0.6;
-            System.out.println("speedY -> " + speedY);
-            System.out.println("stopY -> " + stopY);
-            //go = false;
         } else {
             speedY += gravity * time;
         }
@@ -191,11 +163,9 @@ public class Bullet implements WorldShape {
         if (stopY) {
             speedY = 0d;
         }
-
         if (ballform.t.getX() <= -1000 || ballform.t.getX() >= 1000) {
             directionX = directionX * -1;
         }
-
         if (ballform.t.getZ() <= -1000 || ballform.t.getZ() >= 1000) {
             directionZ = directionZ * -1;
         }
@@ -207,26 +177,18 @@ public class Bullet implements WorldShape {
         double y = ballform.t.getY() + traveledDistanceY;
         double x = ballform.t.getX() + traveledDistanceX;
 
-        System.out.println("z->" + z);
-        System.out.println("y->" + y);
-        System.out.println("x->" + x);
-
         if (y <= radius) {
             y = radius;
         }
-
         if (x <= -1000) {
             x = -1000;
         }
-
         if (x >= 1000) {
             x = 1000;
         }
-
         if (z <= -1000) {
             z = -1000;
         }
-
         if (z >= 1000) {
             z = 1000;
         }
@@ -265,9 +227,10 @@ public class Bullet implements WorldShape {
         traveledDistanceY = 0d;
         traveledDistanceZ = 0d;
         ballform.t.setY(300);
-        ballform.t.setX(DirectorMgr.getInstance().getAngleX());
-        ballform.t.setZ(DirectorMgr.getInstance().getAngleZ());
-        
+        ballform.t.setX(DirectorMgr.getInstance().getPositionXTank());
+        ballform.t.setZ(DirectorMgr.getInstance().getPositionZTank());
+        System.out.println("1 --->>>>> "+ DirectorMgr.getInstance().getPositionXTank());
+        System.out.println("2 --->>>>> "+ DirectorMgr.getInstance().getPositionZTank());
         
         //vertical
         angleY = DirectorMgr.getInstance().getAngleY();
