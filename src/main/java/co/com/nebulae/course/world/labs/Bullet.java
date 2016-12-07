@@ -240,7 +240,7 @@ public class Bullet implements WorldShape {
         angleY = DirectorMgr.getInstance().getAngleY();
         //horizontal
         angleZ = DirectorMgr.getInstance().getAngleZ();
-        angleX = DirectorMgr.getInstance().getAngleX();
+        angleX =  90 - DirectorMgr.getInstance().getAngleX();
         //double inverterX = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
 
         double inverterX = Math.sin(Math.toRadians(angleY));
