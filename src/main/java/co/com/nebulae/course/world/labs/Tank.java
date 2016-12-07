@@ -137,37 +137,12 @@ public class Tank implements WorldShape {
         }
 
         switch (keyEvent.getCode()) {
-            //TANK
-//            case W:
-//                moveForward(keyPressed, true);
-//                break;
-//            case S:
-//                moveForward(keyPressed, false);
-//                break;
-//            case A:
-//                tankForm.ry.setAngle(tankForm.ry.getAngle() - 1);
-//                if (tankForm.ry.getAngle() < 0) {
-//                    tankForm.ry.setAngle(360 - tankForm.ry.getAngle());
-//                }
-//                moveForward(keyPressed, null);
-//                break;
-//            case D:
-//                tankForm.ry.setAngle(tankForm.ry.getAngle() + 1);
-//                if (tankForm.ry.getAngle() > 360) {
-//                    tankForm.ry.setAngle(tankForm.ry.getAngle() - 360);
-//                }
-//                moveForward(keyPressed, null);
-//                break;
-
             //CANON
             case UP:
                 canonForm.rx.setAngle(canonForm.rx.getAngle() + 1);
                 if (canonForm.rx.getAngle() > 360) {
                     canonForm.rx.setAngle(canonForm.rx.getAngle() - 360);
                 }
-                DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
-                DirectorMgr.getInstance().setAngleY(90 - canonForm.rx.getAngle());
-
                 changeCanonPosition();
                 break;
             case DOWN:
@@ -175,8 +150,6 @@ public class Tank implements WorldShape {
                 if (canonForm.rx.getAngle() < 0) {
                     canonForm.rx.setAngle(360 + canonForm.rx.getAngle());
                 }
-                DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
-                DirectorMgr.getInstance().setAngleY(90 - canonForm.rx.getAngle());
                 changeCanonPosition();
                 break;
             case RIGHT:
@@ -184,7 +157,6 @@ public class Tank implements WorldShape {
                 if (canonForm.ry.getAngle() < 0) {
                     canonForm.ry.setAngle(360 - canonForm.ry.getAngle());
                 }
-                DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle());
 
                 changeCanonPosition();
                 break;
@@ -193,7 +165,6 @@ public class Tank implements WorldShape {
                 if (canonForm.ry.getAngle() > 360) {
                     canonForm.ry.setAngle(canonForm.ry.getAngle() - 360);
                 }
-                DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle());
                 changeCanonPosition();
                 break;
         }
@@ -211,8 +182,8 @@ public class Tank implements WorldShape {
 
         Boolean left = movement.get(KeyCode.A);
 
-        System.out.println("forward: "+ forward+ " -- back: "+ back+ " -- Right: "+right+ " -- Left: "+ left );
-        
+        //System.out.println("forward: " + forward + " -- back: " + back + " -- Right: " + right + " -- Left: " + left);
+
         if (forward != null && forward) {
             speed = 1d;
             directionX = 1d;
@@ -239,8 +210,6 @@ public class Tank implements WorldShape {
             }
         }
 
-        
-        
         //angleYTank = tankForm.rx.getAngle();
         angleZTank = tankForm.ry.getAngle();
         angleXTank = 90 - tankForm.ry.getAngle();
@@ -275,6 +244,17 @@ public class Tank implements WorldShape {
      */
     private void changeCanonPosition() {
         canon.setTranslateY(canon.getHeight() / 2);
+        DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle());
+        DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle());
+        DirectorMgr.getInstance().setAngleX(90 - canonForm.ry.getAngle());
+        
+        System.out.println("tankForm.rx.getAngle()-> "+ tankForm.rx.getAngle());
+        System.out.println("tankForm.ry.getAngle()-> "+ tankForm.ry.getAngle());
+        //System.out.println("tankForm.rx.getAngle()-> "+ tankForm.rx.getAngle());
+        
+//        DirectorMgr.getInstance().setAngleY(canonForm.rx.getAngle() + tankForm.rx.getAngle());
+//        DirectorMgr.getInstance().setAngleZ(canonForm.ry.getAngle() +tankForm.ry.getAngle());
+//        DirectorMgr.getInstance().setAngleX(90 - canonForm.ry.getAngle()+ tankForm.ry.getAngle());
     }
 
 }

@@ -26,6 +26,8 @@ public class Bullet implements WorldShape {
 
     private Xform world;
     final Xform elementsGroup = new Xform();
+    
+    private final double spaceSize = 5000;
 
     //<editor-fold defaultstate="collapsed" desc="ARROW">
 
@@ -163,10 +165,10 @@ public class Bullet implements WorldShape {
         if (stopY) {
             speedY = 0d;
         }
-        if (ballform.t.getX() <= -1000 || ballform.t.getX() >= 1000) {
+        if (ballform.t.getX() <= -spaceSize || ballform.t.getX() >= spaceSize) {
             directionX = directionX * -1;
         }
-        if (ballform.t.getZ() <= -1000 || ballform.t.getZ() >= 1000) {
+        if (ballform.t.getZ() <= -spaceSize || ballform.t.getZ() >= spaceSize) {
             directionZ = directionZ * -1;
         }
 
@@ -180,17 +182,17 @@ public class Bullet implements WorldShape {
         if (y <= radius) {
             y = radius;
         }
-        if (x <= -1000) {
-            x = -1000;
+        if (x <= -spaceSize) {
+            x = -spaceSize;
         }
-        if (x >= 1000) {
-            x = 1000;
+        if (x >= spaceSize) {
+            x = spaceSize;
         }
-        if (z <= -1000) {
-            z = -1000;
+        if (z <= -spaceSize) {
+            z = -spaceSize;
         }
-        if (z >= 1000) {
-            z = 1000;
+        if (z >= spaceSize) {
+            z = spaceSize;
         }
 
         ballform.t.setZ(z);
@@ -229,14 +231,16 @@ public class Bullet implements WorldShape {
         ballform.t.setY(300);
         ballform.t.setX(DirectorMgr.getInstance().getPositionXTank());
         ballform.t.setZ(DirectorMgr.getInstance().getPositionZTank());
-        System.out.println("1 --->>>>> "+ DirectorMgr.getInstance().getPositionXTank());
-        System.out.println("2 --->>>>> "+ DirectorMgr.getInstance().getPositionZTank());
+        
+//        System.out.println("AngleY-> "+ DirectorMgr.getInstance().getAngleY());
+//        System.out.println("getAngleZ-> "+DirectorMgr.getInstance().getAngleZ());
+//        System.out.println("getAngleX-> "+DirectorMgr.getInstance().getAngleX());
         
         //vertical
         angleY = DirectorMgr.getInstance().getAngleY();
         //horizontal
         angleZ = DirectorMgr.getInstance().getAngleZ();
-        angleX = 90 - DirectorMgr.getInstance().getAngleY();
+        angleX = DirectorMgr.getInstance().getAngleX();
         //double inverterX = (angleY >= 0 && angleY <= 180) ? 1d : -1d;
 
         double inverterX = Math.sin(Math.toRadians(angleY));
